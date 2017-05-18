@@ -6,7 +6,7 @@ RUN     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-sele
 
 # Install selected extensions and other stuff
 RUN     apt-get update \
-        && apt-get -y --no-install-recommends install apt-utils 
+        && apt-get -y --no-install-recommends install apt-utils software-properties-common
 
 # Install Java
 RUN     add-apt-repository -y ppa:webupd8team/java \
