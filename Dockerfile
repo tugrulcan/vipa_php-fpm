@@ -8,11 +8,17 @@ RUN     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-sele
 RUN     apt-get update \
         && apt-get -y --no-install-recommends install \
         apt-utils software-properties-common python-software-properties
-
+USER su
 # Install Java
-RUN     add-apt-repository -y ppa:webupd8team/java \
-        && apt-get update \
-        && apt-get -y install oracle-java8-installer
+RUN set -ex && \
+    echo 'deb http://deb.debian.org/debian jessie-backports main' \
+      > /etc/apt/sources.list.d/jessie-backports.list && \
+
+    apt update -y && \
+    apt install -t \
+      jessie-backports \
+      openjdk-8-jre-headless \
+      ca-certificates-java -y
 
 # Elastic
 RUN     wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - \
