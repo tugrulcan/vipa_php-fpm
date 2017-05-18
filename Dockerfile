@@ -11,7 +11,7 @@ RUN     apt-get update \
 # Install Java
 RUN     set -ex && \
         echo 'deb http://deb.debian.org/debian jessie-backports main' \
-        > /etc/apt/sources.list.d/jessie-backports.list && \
+        >> /etc/apt/sources.list.d/jessie-backports.list && \
 
         apt update -y && \
         apt install -t \
@@ -104,3 +104,9 @@ RUN     su -s /bin/bash www-data \
         && php app/console vipa:install  \
         && php app/console vipa:install:samples  \
         && php app/console vipa:install:initial-data
+
+ADD     ./nginx.conf /etc/nginx/sites-available/vipa
+RUN     service nginx restart
+RUN     su -s /bin/bash www-data \ 
+        && cd /var/www/vipa \
+        && app/console vipa:install:package citation
