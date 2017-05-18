@@ -8,7 +8,6 @@ RUN     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-sele
 RUN     apt-get update \
         && apt-get -y --no-install-recommends install \
         apt-utils software-properties-common python-software-properties
-USER su
 # Install Java
 RUN set -ex && \
     echo 'deb http://deb.debian.org/debian jessie-backports main' \
