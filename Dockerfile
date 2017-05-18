@@ -7,28 +7,28 @@ RUN     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-sele
 # Install selected extensions and other stuff
 RUN     apt-get update \
         && apt-get -y --no-install-recommends install \
-        apt-utils software-properties-common python-software-properties
+        apt-utils software-properties-common python-software-properties wget
 # Install Java
-RUN set -ex && \
-    echo 'deb http://deb.debian.org/debian jessie-backports main' \
-      > /etc/apt/sources.list.d/jessie-backports.list && \
+RUN     set -ex && \
+        echo 'deb http://deb.debian.org/debian jessie-backports main' \
+        > /etc/apt/sources.list.d/jessie-backports.list && \
 
-    apt update -y && \
-    apt install -t \
-      jessie-backports \
-      openjdk-8-jre-headless \
-      ca-certificates-java -y
+        apt update -y && \
+        apt install -t \
+        jessie-backports \
+        openjdk-8-jre-headless \
+        ca-certificates-java -y
 
 # Elastic
-RUN     wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - \
-        && echo "deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-1.7.list \
+RUN     wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add - \
+        && echo "deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" |  tee -a /etc/apt/sources.list.d/elasticsearch-1.7.list \
         &&  apt-get update \
         &&  apt-get -y install elasticsearch \
         &&  update-rc.d elasticsearch defaults 95 10 \
         &&  service elasticsearch restart
 
 # Install PostgreSQL and Git
-RUN     sudo apt-get install -y postgresql git
+RUN     apt-get install -y postgresql git
 
 # Install PHP extensions
 RUN     apt-get -y --no-install-recommends install php7.0-memcached php7.0-pgsql php7.0-sqlite3 \ 
