@@ -37,12 +37,11 @@ RUN     apt-get -y --no-install-recommends install php7.0-memcached php7.0-pgsql
         && apt-get -y --no-install-recommends install npm \
         && npm install -g bower
 
-RUN     apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Install Nginx
 RUN     apt-get install -y --force-yes nginx \
         && rm /etc/nginx/sites-enabled/default \
-        && rm /etc/nginx/sites-available/default \
+        && rm /etc/nginx/sites-available/default
 
 # Install Composer
 RUN     curl -sS https://getcomposer.org/installer | php &&  mv composer.phar /usr/local/bin/composer
@@ -64,6 +63,7 @@ RUN     sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fp
         && service nginx restart \
         && service php7.0-fpm restart
 
+RUN     /etc/init.d/postgresql start
 # PostgreSQL database and user setup
 RUN     su - postgres \
         && psql -d template1 -U postgres \
@@ -110,3 +110,5 @@ RUN     service nginx restart
 RUN     su -s /bin/bash www-data \ 
         && cd /var/www/vipa \
         && app/console vipa:install:package citation
+
+RUN     apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
